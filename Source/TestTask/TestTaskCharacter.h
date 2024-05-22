@@ -81,6 +81,9 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void ReleasePlayerAfterDialog();
 
+	UPROPERTY(BlueprintReadOnly)
+	bool UsingGamepad = false;
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

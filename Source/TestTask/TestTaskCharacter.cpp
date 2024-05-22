@@ -9,9 +9,11 @@
 #include "DialogSystem/Public/Components/InteractComponent.h"
 #include "GameFramework/Controller.h"
 #include "EnhancedInputComponent.h"
+#include "CommonInputSubsystem.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Components/DialogManager.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -149,6 +151,24 @@ void ATestTaskCharacter::Look(const FInputActionValue& Value)
 
 void ATestTaskCharacter::Interact(const FInputActionValue& Value)
 {
+	if (const APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0))
+	{
+		if (const ULocalPlayer* LocalPlayer = PC->GetLocalPlayer())
+		{
+			if (const UCommonInputSubsystem* CommonInputSubsystem = LocalPlayer->GetSubsystem<UCommonInputSubsystem>())
+			{
+				if (const ECommonInputType InputType = CommonInputSubsystem->GetCurrentInputType(); InputType == ECommonInputType::Gamepad)
+				{
+					UsingGamepad = true;
+				}
+				else
+				{
+					UsingGamepad = false;
+				}
+			}
+		}
+	}
+
 	if (InteractComponent->TryToInteract(DialogManager))
 	{
 		StopPlayerForDialog();

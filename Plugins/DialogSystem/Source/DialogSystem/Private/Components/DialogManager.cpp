@@ -3,7 +3,7 @@
 
 #include "Components/DialogManager.h"
 
-#include "GameFramework/Character.h"
+#include "Blueprint/UserWidget.h"
 
 // Sets default values for this component's properties
 UDialogManager::UDialogManager()
@@ -53,8 +53,17 @@ void UDialogManager::ProcessDialogRow(FName SentenceName)
 	{
 		OnResponseUpdated.Broadcast(CurrentSentence->Responses);
 	}
+}
 
-	//PlaySound
+bool UDialogManager::SyncDialog(UDataTable* ParticipantDialogTable)
+{
+	if (!ParticipantDialogTable)
+	{
+		return false;
+	}
+
+	DialogTable = ParticipantDialogTable;
+	return true;
 }
 
 void UDialogManager::TryProcessNextDialogRow()

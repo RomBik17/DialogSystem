@@ -20,7 +20,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	class UUsableComponent* CashedUsableComponent = nullptr;
+	class UDialogParticipantComponent* CashedDialogParticipantComponent = nullptr;
 
 	bool bCanInteract = false;
 
@@ -33,13 +33,13 @@ public:
 
 	void ClearCache();
 
-	void UpdateCache(class UUsableComponent* InCashe);
+	void UpdateCache(class UDialogParticipantComponent* InCashe);
 
-	void TryToInteract();
+	bool TryToInteract(class UDialogManager* DialogManager);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	float GetInteractDistance() const;
 
-	void ScanForUsableObjectInView(FCollisionQueryParams& QueryParams);
+	void ScanForDialogPersonInView(FCollisionQueryParams& QueryParams);
 		
 };

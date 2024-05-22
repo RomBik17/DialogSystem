@@ -2,7 +2,8 @@
 
 
 #include "Components/InteractComponent.h"
-#include "Components/UsableComponent.h"
+#include "Components/DialogParticipantComponent.h"
+
 
 // Sets default values for this component's properties
 UInteractComponent::UInteractComponent()
@@ -35,32 +36,40 @@ void UInteractComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 void UInteractComponent::ClearCache()
 {
-	if (bCanInteract && CashedUsableComponent)
+	if (bCanInteract && CashedDialogParticipantComponent)
 	{
-		CashedUsableComponent->OnCanceledPrepareForUsing.Broadcast();
+		CashedDialogParticipantComponent->OnCanceledPrepareForDialog.Broadcast();
 	}
 
 	bCanInteract = false;
-	CashedUsableComponent = nullptr;
+	CashedDialogParticipantComponent = nullptr;
 }
 
-void UInteractComponent::UpdateCache(UUsableComponent* InCashe)
+void UInteractComponent::UpdateCache(UDialogParticipantComponent* InCashe)
 {
-	CashedUsableComponent = InCashe;
+	CashedDialogParticipantComponent = InCashe;
 	bCanInteract = true;
 
-	if (bCanInteract && CashedUsableComponent)
+	if (bCanInteract && CashedDialogParticipantComponent)
 	{
-		CashedUsableComponent->OnPrepareForUsing.Broadcast();
+		CashedDialogParticipantComponent->OnPrepareForDialog.Broadcast();
 	}
 }
 
-void UInteractComponent::TryToInteract()
+bool UInteractComponent::TryToInteract(UDialogManager* DialogManager)
 {
-	if (bCanInteract && CashedUsableComponent)
+	if (!DialogManager)
 	{
-		CashedUsableComponent->OnUsed.Broadcast();
+		return false;
 	}
+
+	if (bCanInteract && CashedDialogParticipantComponent)
+	{
+		CashedDialogParticipantComponent->JoinToDialog(DialogManager);
+		return true;
+	}
+
+	return false;
 }
 
 float UInteractComponent::GetInteractDistance() const
@@ -68,7 +77,7 @@ float UInteractComponent::GetInteractDistance() const
 	return InteractDistance;
 }
 
-void UInteractComponent::ScanForUsableObjectInView(FCollisionQueryParams& QueryParams)
+void UInteractComponent::ScanForDialogPersonInView(FCollisionQueryParams& QueryParams)
 {
 	APlayerCameraManager* CameraManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
 	FVector TraceStart = CameraManager->GetCameraLocation();
@@ -80,7 +89,7 @@ void UInteractComponent::ScanForUsableObjectInView(FCollisionQueryParams& QueryP
 
 	if (Hit.bBlockingHit && IsValid(Hit.GetActor()))
 	{
-		if (UUsableComponent* PrepCache = Hit.GetActor()->FindComponentByClass<UUsableComponent>())
+		if (UDialogParticipantComponent* PrepCache = Hit.GetActor()->FindComponentByClass<UDialogParticipantComponent>())
 		{
 			UpdateCache(PrepCache);
 		}

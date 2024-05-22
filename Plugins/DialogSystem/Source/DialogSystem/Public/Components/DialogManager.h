@@ -52,7 +52,7 @@ struct DIALOGSYSTEM_API FSentenceRow : public FTableRowBase
 	TArray<FResponseData> Responses;
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEndDialog);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStartEndDialog);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSentenceUpdate, FText, Sentence);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FResponseUpdate, const TArray<FResponseData>&, Responses);
 
@@ -94,14 +94,19 @@ public:
 
 	void ProcessDialogRow(FName SentenceName);
 
+	bool SyncDialog(UDataTable* ParticipantDialogTable);
+
 	UFUNCTION(BlueprintCallable)
 	void TryProcessNextDialogRow();
 
 	UFUNCTION(BlueprintCallable)
 	void TryProcessNextDialogRowAfterResponse(FName SentenceRowName);
 
+	UPROPERTY(BlueprintAssignable, Meta = (DisplayName = "On Start Dialog"), Category = "Events")
+	FStartEndDialog StartDialog;
+
 	UPROPERTY(BlueprintAssignable, Meta = (DisplayName = "On End Dialog"), Category = "Events")
-	FEndDialog EndDialog;
+	FStartEndDialog EndDialog;
 
 	UPROPERTY(BlueprintAssignable, Meta = (DisplayName = "On Sentence Updated"), Category = "Events")
 	FSentenceUpdate OnSentenceUpdated;

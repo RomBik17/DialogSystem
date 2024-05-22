@@ -11,6 +11,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Components/DialogManager.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -53,6 +54,9 @@ ATestTaskCharacter::ATestTaskCharacter()
 
 	InteractComponent = CreateDefaultSubobject<UInteractComponent>(TEXT("InteractComponent"));
 	AddOwnedComponent(InteractComponent);
+
+	DialogManager = CreateDefaultSubobject<UDialogManager>(TEXT("DialogManager"));
+	AddOwnedComponent(DialogManager);
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -145,7 +149,10 @@ void ATestTaskCharacter::Look(const FInputActionValue& Value)
 
 void ATestTaskCharacter::Interact(const FInputActionValue& Value)
 {
-	InteractComponent->TryToInteract();
+	if (InteractComponent->TryToInteract(DialogManager))
+	{
+		StopPlayerForDialog();
+	}
 }
 
 void ATestTaskCharacter::InteractTickScan()
@@ -153,5 +160,5 @@ void ATestTaskCharacter::InteractTickScan()
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
 
-	InteractComponent->ScanForUsableObjectInView(QueryParams);
+	InteractComponent->ScanForDialogPersonInView(QueryParams);
 }

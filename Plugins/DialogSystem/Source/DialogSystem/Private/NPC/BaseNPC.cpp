@@ -3,8 +3,7 @@
 
 #include "NPC/BaseNPC.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/UsableComponent.h"
-#include "Components/DialogManager.h"
+#include "Components/DialogParticipantComponent.h"
 
 // Sets default values
 ABaseNPC::ABaseNPC()
@@ -14,11 +13,8 @@ ABaseNPC::ABaseNPC()
 
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
-	UsableComponent = CreateDefaultSubobject<UUsableComponent>(TEXT("UsableComponent"));
-	AddOwnedComponent(UsableComponent);
-
-	DialogManager = CreateDefaultSubobject<UDialogManager>(TEXT("DialogManager"));
-	AddOwnedComponent(DialogManager);
+	DialogParticipantComponent = CreateDefaultSubobject<UDialogParticipantComponent>(TEXT("DialogParticipant"));
+	AddOwnedComponent(DialogParticipantComponent);
 }
 
 // Called when the game starts or when spawned

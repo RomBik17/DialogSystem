@@ -52,6 +52,9 @@ class ATestTaskCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Interaction, meta = (AllowPrivateAccess = "true"))
 	class UInteractComponent* InteractComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Interaction, meta = (AllowPrivateAccess = "true"))
+	class UDialogManager* DialogManager;
+
 public:
 	ATestTaskCharacter();
 
@@ -71,6 +74,12 @@ protected:
 	void Interact(const FInputActionValue& Value);
 
 	void InteractTickScan();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void StopPlayerForDialog();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ReleasePlayerAfterDialog();
 
 protected:
 	// APawn interface

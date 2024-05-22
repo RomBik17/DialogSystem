@@ -11,12 +11,8 @@ class DIALOGSYSTEM_API ABaseNPC : public ACharacter
 {
 	GENERATED_BODY()
 
-	/** Components */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Interaction, meta = (AllowPrivateAccess = "true"))
-	class UUsableComponent* UsableComponent;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Dialog, meta = (AllowPrivateAccess = "true"))
-	class UDialogManager* DialogManager;
+	class UDialogParticipantComponent* DialogParticipantComponent;
 
 public:
 	// Sets default values for this character's properties
@@ -33,10 +29,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	/** Returns UsableComponent subobject **/
-	FORCEINLINE class UUsableComponent* GetUsableComponent() const { return UsableComponent; }
-
 	/** Returns DialogManager subobject **/
-	FORCEINLINE class UDialogManager* GetDialogManager() const { return DialogManager; }
+	FORCEINLINE class UDialogParticipantComponent* GetDialogParticipantComponent() const { return DialogParticipantComponent; }
 
 };
